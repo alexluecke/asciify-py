@@ -19,38 +19,43 @@ class Asciify(object):
 
         self.run()
 
-    def ascii_map(self, v):
-        grad = '@8OCoc:. '
+    def map_to_ascii(self, v):
+        #grad = '@8OCoc:. '
+        grad = '#&O/+:-. '
         step = 255/(len(grad)-1)
-        c = 0
-        for x in range(0, 255, step):
-            if (v <= x):
-                return grad[c]
-            c += 1
+        for x in range(len(grad)-1):
+            if (v <= x*step):
+                return grad[x]
         return grad[-1]
 
-    def run(self):
-
-        img_out = self.img.convert(colors=256)
-        rgb_img = img_out.convert('L').convert('RGB')
-        (w, h) = rgb_img.size
-
+    def get_img_resize_factor(self, w, h):
         # Shrink to proper size to display on screen:
         if w > self.size or h > self.size:
             if h > w:
                 f = self.size / float(h)
             else:
                 f = self.size / float(w)
-            rgb_img = rgb_img.resize((int(w*f), int(h*f)), PIL.Image.ANTIALIAS)
+            return (int(w*f), int(h*f))
+        return (w, h)
 
+    def run(self):
+
+        # Convert the image to greyscale then get RGB values
+        rgb_img = self.img.convert('L').convert('RGB')
+
+        # Resize image to constraint
+        rgb_img = rgb_img.resize(
+                self.get_img_resize_factor(*rgb_img.size),
+                PIL.Image.ANTIALIAS)
         (row, col) = rgb_img.size
 
         # Write to file
         with open('ascii.txt', 'w+') as FD:
             for jj in range(col):
                 for ii in range(row):
+                    # For greyscale RGB, r = g = b
                     (r, g, b) = rgb_img.getpixel((ii, jj))
-                    FD.write(self.ascii_map(r))
+                    FD.write(self.map_to_ascii(r))
                 FD.write('\n')
 
 if __name__ == '__main__':
