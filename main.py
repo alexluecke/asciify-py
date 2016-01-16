@@ -5,28 +5,32 @@ import Image
 import argparse
 
 class Asciify(object):
-    img = None
-    size = 128
+    img      = None
+    size     = 128
+    rgb_max  = 255
+    gradient = '#&O/+:-. ' # '@8OCoc:. '
 
     def __init__(self, **kwargs):
+
+        try:
+            self.size = int(kwargs.get('size'))
+        except:
+            pass # resort to default
+
         try:
             self.img = Image.open(kwargs.get('file', ''))
         except:
             print("Couldn't open image.")
-
-        if (kwargs.get('size') is not None):
-            self.size = int(kwargs.get('size'))
+            return
 
         self.run()
 
     def map_to_ascii(self, v):
-        #grad = '@8OCoc:. '
-        grad = '#&O/+:-. '
-        step = 255/len(grad)
-        for x in range(len(grad)):
+        step = self.rgb_max/len(self.gradient)
+        for x in range(len(self.gradient)):
             if (v <= x*step):
-                return grad[x]
-        return grad[-1]
+                return self.gradient[x]
+        return self.gradient[-1]
 
     def get_img_resize_factor(self, w, h):
         # Shrink to proper size to display on screen:
