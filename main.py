@@ -32,7 +32,7 @@ class Asciify(object):
                 return self.gradient[x]
         return self.gradient[-1]
 
-    def get_resize_factor(self, w, h):
+    def get_resize(self, w, h):
         # Shrink to proper size to display on screen:
         if w > self.size or h > self.size:
             if h > w:
@@ -49,7 +49,7 @@ class Asciify(object):
 
         # Resize image to constraint
         rgb_img = rgb_img.resize(
-                self.get_resize_factor(*rgb_img.size),
+                self.get_resize(*rgb_img.size),
                 PIL.Image.ANTIALIAS)
 
         # (column, row) = (width, height)
