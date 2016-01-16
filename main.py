@@ -22,8 +22,8 @@ class Asciify(object):
     def map_to_ascii(self, v):
         #grad = '@8OCoc:. '
         grad = '#&O/+:-. '
-        step = 255/(len(grad)-1)
-        for x in range(len(grad)-1):
+        step = 255/len(grad)
+        for x in range(len(grad)):
             if (v <= x*step):
                 return grad[x]
         return grad[-1]
@@ -47,14 +47,16 @@ class Asciify(object):
         rgb_img = rgb_img.resize(
                 self.get_img_resize_factor(*rgb_img.size),
                 PIL.Image.ANTIALIAS)
-        (row, col) = rgb_img.size
+
+        # (column, row) = (width, height)
+        (col, row) = rgb_img.size
 
         # Write to file
         with open('ascii.txt', 'w+') as FD:
-            for jj in range(col):
-                for ii in range(row):
+            for ii in range(row):
+                for jj in range(col):
                     # For greyscale RGB, r = g = b
-                    (r, g, b) = rgb_img.getpixel((ii, jj))
+                    (r, g, b) = rgb_img.getpixel((jj, ii))
                     FD.write(self.map_to_ascii(r))
                 FD.write('\n')
 
