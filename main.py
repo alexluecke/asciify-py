@@ -8,9 +8,17 @@ class Asciify(object):
     img      = None
     size     = 128
     rgb_max  = 255
-    gradient = '#&O/+:-. ' # '@8OCoc:. '
+    gradient = '#&O/+:-. '
+
+    # Other gradient examples:
+    # '@8OCoc:. '
+    # '#/+-. '
 
     def __init__(self, **kwargs):
+
+        self.gradient = kwargs.get('gradient') \
+                if kwargs.get('gradient') \
+                else self.gradient
 
         try:
             self.size = int(kwargs.get('size'))
@@ -68,5 +76,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('-f','--file', help='Input file name', required=True)
     parser.add_argument('-s','--size', help='Max number of characters per row/col', required=False)
+    parser.add_argument('-g','--gradient', help='Custom character gradient (dark->light)', required=False)
     args = parser.parse_args()
-    asciify = Asciify(file=args.file, size=args.size)
+    asciify = Asciify(file=args.file, size=args.size, gradient=args.gradient)
