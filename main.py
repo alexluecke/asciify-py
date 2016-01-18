@@ -1,7 +1,7 @@
 from __future__ import print_function
+from PIL import Image
 
 import PIL
-import Image
 import argparse
 
 class Asciify(object):
@@ -16,6 +16,8 @@ class Asciify(object):
 
     def __init__(self, **kwargs):
 
+        # Gradient is always passed in kwargs but might be None so I can't
+        # use standard kwargs.get('name', default).
         self.gradient = kwargs.get('gradient') \
                 if kwargs.get('gradient') \
                 else self.gradient
@@ -29,9 +31,7 @@ class Asciify(object):
             self.img = Image.open(kwargs.get('file', ''))
         except:
             print("Couldn't open image.")
-            return
-
-        self.run()
+            exit
 
     def map_to_ascii(self, v):
         step = self.rgb_max/len(self.gradient)
@@ -63,14 +63,16 @@ class Asciify(object):
         # (column, row) = (width, height)
         (col, row) = rgb_img.size
 
-        # Write to file
-        with open('ascii.txt', 'w+') as FD:
-            for ii in range(row):
-                for jj in range(col):
-                    # For greyscale RGB, r = g = b
-                    (r, g, b) = rgb_img.getpixel((jj, ii))
-                    FD.write(self.map_to_ascii(r))
-                FD.write('\n')
+        # return value:
+        ret=''
+        for ii in range(row):
+            for jj in range(col):
+                # For greyscale RGB, r = g = b
+                (r, g, b) = rgb_img.getpixel((jj, ii))
+                ret += self.map_to_ascii(r)
+            ret += "\n"
+
+        return ret
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
@@ -78,4 +80,5 @@ if __name__ == '__main__':
     parser.add_argument('-s','--size', help='Max number of characters per row/col', required=False)
     parser.add_argument('-g','--gradient', help='Custom character gradient (dark->light)', required=False)
     args = parser.parse_args()
-    asciify = Asciify(file=args.file, size=args.size, gradient=args.gradient)
+    asciified = Asciify(file=args.file, size=args.size, gradient=args.gradient).run()
+    print(asciified)
