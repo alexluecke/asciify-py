@@ -10,10 +10,6 @@ class Asciify(object):
     rgb_max  = 255
     gradient = u'#&O/+:-. '
 
-    # Other gradient examples:
-    # '@8OCoc:. '
-    # '#/+-. '
-
     def __init__(self, **kwargs):
 
         # Gradient is always passed in kwargs but might be None so I can't
