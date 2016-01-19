@@ -8,7 +8,7 @@ class Asciify(object):
     img      = None
     size     = 128
     rgb_max  = 255
-    gradient = '#&O/+:-. '
+    gradient = u'#&O/+:-. '
 
     # Other gradient examples:
     # '@8OCoc:. '
