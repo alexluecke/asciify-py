@@ -34,6 +34,8 @@ class Asciify(object):
             exit
 
     def map_to_ascii(self, v):
+        ''' Break into step sized chunks for RGB values where each step is
+        associated with one of the ascii chars in the gradient. '''
         step = self.rgb_max/len(self.gradient)
         for x in range(len(self.gradient)):
             if (v <= x*step):
@@ -64,7 +66,7 @@ class Asciify(object):
         (col, row) = rgb_img.size
 
         # return value:
-        ret=''
+        ret=u''
         for ii in range(row):
             for jj in range(col):
                 # For greyscale RGB, r = g = b
@@ -78,7 +80,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('-f','--file', help='Input file name', required=True)
     parser.add_argument('-s','--size', help='Max number of characters per row/col', required=False)
-    parser.add_argument('-g','--gradient', help='Custom character gradient (dark->light)', required=False)
+    parser.add_argument('-g','--gradient', help='Custom character gradient (dark->light)', type=lambda s: unicode(s, 'utf8'), required=False)
     args = parser.parse_args()
     asciified = Asciify(file=args.file, size=args.size, gradient=args.gradient).run()
     print(asciified)
